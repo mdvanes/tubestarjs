@@ -1,12 +1,12 @@
-import zmq from "zeromq";
 import express from "express";
-import fs from "fs";
+import zmq from "zeromq";
 
 const sock = zmq.socket("sub");
 
 const TCP_ENDPOINT = "tcp://pubsub.besteffort.ndovloket.nl:7658";
 const TCP_ENVELOPE = "/EBS/KV6posinfo";
 const TCP_PORT = 7658;
+const EXPRESS_PORT = 3000;
 
 async function run() {
   const app = express();
@@ -44,14 +44,10 @@ async function run() {
     });
   });
 
-  const index = fs.readFileSync("./index.html", "utf8");
-  app.get("/", (req, res) => res.send(index));
+  app.use(express.static("public"));
 
-  const echarts = fs.readFileSync("./echarts.js", "utf8");
-  app.get("/echarts.js", (req, res) => res.send(echarts));
-
-  app.listen(3000);
-  console.log("Listening on port 3000");
+  app.listen(EXPRESS_PORT);
+  console.log(`Listening on port ${EXPRESS_PORT}`);
 }
 
 run().catch((err) => console.log(err));
