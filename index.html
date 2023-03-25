@@ -1,15 +1,42 @@
 <html>
+  <head>
+    <style>
+      html,
+      body {
+        background-color: darkslategray;
+        color: white;
+        font-weight: bold;
+        font-family: sans-serif;
+        height: 100%;
+        margin: 0;
+      }
+
+      main {
+        display: flex;
+        height: 100%;
+        align-items: center;
+      }
+
+      main > div {
+        flex: 1;
+        text-align: center;
+      }
+    </style>
+    <title>Tubestar.js</title>
+  </head>
   <body>
-    <div id="content"></div>
+    <main>
+      <div>start</div>
+    </main>
 
     <script type="text/javascript">
-      const source = new EventSource('/events');
+      const source = new EventSource("/events");
 
-      source.addEventListener('message', message => {
-        console.log('Got', message);
+      source.addEventListener("message", (message) => {
+        console.log("Got", message);
 
         // Display the event data in the `content` div
-        document.querySelector('#content').innerHTML = event.data;
+        document.querySelector("main > div").innerHTML = event.data;
       });
     </script>
   </body>
