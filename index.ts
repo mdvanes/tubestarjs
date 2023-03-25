@@ -22,15 +22,6 @@ async function run() {
 
     // Tell the client to retry every 10 seconds if connectivity is lost
     res.write("retry: 10000\n\n");
-    let count = 0;
-
-    // while (true) {
-    //   await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    //   console.log("Emit", ++count);
-    //   // Emit an SSE that contains the current 'count' as a string
-    //   res.write(`data: ${count}\n\n`);
-    // }
 
     sock.connect(TCP_ENDPOINT);
     sock.subscribe(TCP_ENVELOPE);
@@ -44,9 +35,12 @@ async function run() {
         message
       );
 
-      count++;
-
-      res.write(`data: ${count}\n\n`);
+      res.write(
+        `data: ${JSON.stringify({
+          topic: topic.toString("utf-8"),
+          payload: message.length,
+        })}\n\n`
+      );
     });
   });
 

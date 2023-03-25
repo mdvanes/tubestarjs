@@ -17,7 +17,7 @@
         align-items: center;
       }
 
-      main > div {
+      main > ul {
         flex: 1;
         text-align: center;
       }
@@ -26,17 +26,29 @@
   </head>
   <body>
     <main>
-      <div>start</div>
+      <ul>
+        <li id="topic">
+          topic:
+          <span></span>
+        </li>
+
+        <li id="payload">
+          payload:
+          <span></span>
+        </li>
+      </ul>
     </main>
 
     <script type="text/javascript">
       const source = new EventSource("/events");
 
       source.addEventListener("message", (message) => {
-        console.log("Got", message);
+        // console.log("Got", message);
 
-        // Display the event data in the `content` div
-        document.querySelector("main > div").innerHTML = event.data;
+        const { topic, payload } = JSON.parse(event.data);
+
+        document.querySelector("#topic > span").innerHTML = topic;
+        document.querySelector("#payload > span").innerHTML = payload;
       });
     </script>
   </body>
