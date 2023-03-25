@@ -18,8 +18,13 @@
       }
 
       main > ul {
-        flex: 1;
+        flex: 0.5;
         text-align: center;
+        list-style-type: none;
+      }
+
+      main > div {
+        flex: 1;
       }
     </style>
     <title>Tubestar.js</title>
@@ -37,18 +42,51 @@
           <span></span>
         </li>
       </ul>
+      <div id="linechart" style="width: 600px; height: 400px"></div>
     </main>
+
+    <script src="/echarts.js"></script>
 
     <script type="text/javascript">
       const source = new EventSource("/events");
 
-      source.addEventListener("message", (message) => {
-        // console.log("Got", message);
+      const chartDom = document.getElementById("linechart");
+      const myChart = echarts.init(chartDom);
+      const data = [];
+      const option = {
+        xAxis: {
+          type: "category",
+        },
+        yAxis: {
+          type: "value",
+        },
+        series: [
+          {
+            data,
+            type: "line",
+            smooth: true,
+          },
+        ],
+      };
 
+      option && myChart.setOption(option);
+
+      source.addEventListener("message", (message) => {
         const { topic, payload } = JSON.parse(event.data);
 
         document.querySelector("#topic > span").innerHTML = topic;
         document.querySelector("#payload > span").innerHTML = payload;
+
+        data.push(payload);
+        myChart.setOption({
+          series: [
+            {
+              data,
+              type: "line",
+              smooth: true,
+            },
+          ],
+        });
       });
     </script>
   </body>

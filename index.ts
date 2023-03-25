@@ -47,6 +47,9 @@ async function run() {
   const index = fs.readFileSync("./index.html", "utf8");
   app.get("/", (req, res) => res.send(index));
 
+  const echarts = fs.readFileSync("./echarts.js", "utf8");
+  app.get("/echarts.js", (req, res) => res.send(echarts));
+
   app.listen(3000);
   console.log("Listening on port 3000");
 }
