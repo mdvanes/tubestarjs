@@ -1,5 +1,8 @@
 import express from "express";
 import zmq from "zeromq";
+import zlib from "zlib";
+import fs from "fs";
+import xmlJs from "xml-js";
 
 const sock = zmq.socket("sub");
 
@@ -31,16 +34,63 @@ async function run() {
       console.log(
         "Emit: received a message related to:",
         topic.toString("utf-8"),
-        "containing message:",
-        message
+        "containing message:"
+        // message
       );
+      // const gunzip = zlib.createGunzip();
+      // const foo = zlib.gunzipSync(message);
 
-      res.write(
-        `data: ${JSON.stringify({
-          topic: topic.toString("utf-8"),
-          payload: message.length,
-        })}\n\n`
-      );
+      // const newBuffer: any[] = [];
+      // const gunzip = zlib.createGunzip();
+      // // res.pipe(gunzip);
+
+      // gunzip
+      //   .on("data", function (data: any) {
+      //     // decompression chunk ready, add it to the buffer
+      //     newBuffer.push(data.toString());
+      //   })
+      //   .on("end", function () {
+      //     // response and decompression complete, join the buffer and return
+      //     console.log(null, newBuffer.join(""));
+      //   })
+      //   .on("error", function (e) {
+      //     console.log(e);
+      //   });
+
+      // TODO send data gzipped to client, don't unzip in backend
+      zlib.gunzip(message, (err, dezipped) => {
+        const content = dezipped.toString();
+        const contentObj = xmlJs.xml2js(content, { compact: true });
+        // console.log(contentObj);
+
+        fs.writeFile(
+          "output.txt",
+          `${new Date()}\n${content}\n${JSON.stringify(contentObj)}`,
+          (err) => {
+            if (err) {
+              console.error(err);
+              res.write("error");
+              return;
+            }
+
+            // file written successfully
+            res.write(
+              `data: ${JSON.stringify({
+                topic: topic.toString("utf-8"),
+                payloadLength: message.length,
+                payload: contentObj,
+              })}\n\n`
+            );
+          }
+        );
+      });
+
+      // res.write(
+      //   `data: ${JSON.stringify({
+      //     topic: topic.toString("utf-8"),
+      //     payload: message.length,
+      //   })}\n\n`
+      // );
     });
   });
 

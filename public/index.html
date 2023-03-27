@@ -72,12 +72,12 @@
       option && myChart.setOption(option);
 
       source.addEventListener("message", (message) => {
-        const { topic, payload } = JSON.parse(event.data);
+        const { topic, payloadLength, payload } = JSON.parse(event.data);
 
         document.querySelector("#topic > span").innerHTML = topic;
-        document.querySelector("#payload > span").innerHTML = payload;
+        document.querySelector("#payload > span").innerHTML = payloadLength;
 
-        data.push(payload);
+        data.push(payloadLength);
         myChart.setOption({
           series: [
             {
