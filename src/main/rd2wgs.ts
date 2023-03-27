@@ -8,7 +8,8 @@ export interface WGS {
   long: number;
 }
 
-//  source: https://github.com/mmmenno/rd2wgs/blob/master/rd2wgs.php
+// Source: https://github.com/mmmenno/rd2wgs/blob/master/rd2wgs.php
+// Could also be done using: https://www.npmjs.com/package/rdtowgs
 export const rd2wgs = (x: number, y: number): WGS => {
   const dX = (x - 155000) * Math.pow(10, -5);
   const dY = (y - 463000) * Math.pow(10, -5);
