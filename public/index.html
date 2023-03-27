@@ -26,6 +26,12 @@
       main > div {
         flex: 1;
       }
+
+      #payload {
+        text-align: left;
+        height: 80vh;
+        overflow-y: scroll;
+      }
     </style>
     <title>Tubestar.js</title>
   </head>
@@ -56,6 +62,25 @@
       const source = new EventSource("/events");
 
       const vehiclePos = {};
+
+      const renderPos = (v) => {
+        // document.querySelector("#payload > span").innerHTML = JSON.stringify(vehiclePos);
+        const acc = '';
+        const entries = Object.entries(v);
+        entries.sort((k1, k2) => {
+          console.log(k1[0], k2[0])
+          if(k1[0] < k2[0]) {
+            return -1;
+          }
+          if(k1[0] > k2[0] ) {
+            return 1;
+          }
+          return 0;
+        });
+        const y = entries.map(([key, val]) => `${key} - ${JSON.stringify(val)}`);
+        // acc += 
+        document.querySelector("#payload > span").innerHTML = '<br />' + y.join('<br />');
+      }
 
       const chartDom = document.getElementById("linechart");
       const myChart = echarts.init(chartDom);
@@ -113,7 +138,8 @@
               vehiclePos[key].push({ x, y });
             }
           });
-          document.querySelector("#payload > span").innerHTML = JSON.stringify(vehiclePos);
+          // document.querySelector("#payload > span").innerHTML = JSON.stringify(vehiclePos);
+          renderPos(vehiclePos);
         }
       });
     </script>
