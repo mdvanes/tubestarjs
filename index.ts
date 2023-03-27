@@ -1,7 +1,7 @@
 import express from "express";
 import zmq from "zeromq";
 import zlib from "zlib";
-import fs from "fs";
+// import fs from "fs";
 import xmlJs from "xml-js";
 
 const sock = zmq.socket("sub");
@@ -63,25 +63,34 @@ async function run() {
         const contentObj = xmlJs.xml2js(content, { compact: true });
         // console.log(contentObj);
 
-        fs.writeFile(
-          "output.txt",
-          `${new Date()}\n${content}\n${JSON.stringify(contentObj)}`,
-          (err) => {
-            if (err) {
-              console.error(err);
-              res.write("error");
-              return;
-            }
+        // fs.writeFile(
+        //   "output.txt",
+        //   `${new Date()}\n${content}\n${JSON.stringify(contentObj)}`,
+        //   (err) => {
+        //     if (err) {
+        //       console.error(err);
+        //       res.write("error");
+        //       return;
+        //     }
 
-            // file written successfully
-            res.write(
-              `data: ${JSON.stringify({
-                topic: topic.toString("utf-8"),
-                payloadLength: message.length,
-                payload: contentObj,
-              })}\n\n`
-            );
-          }
+        //     // file written successfully
+        //     res.write(
+        //       `data: ${JSON.stringify({
+        //         topic: topic.toString("utf-8"),
+        //         payloadLength: message.length,
+        //         payload: contentObj,
+        //       })}\n\n`
+        //     );
+        //   }
+        // );
+
+        // file written successfully
+        res.write(
+          `data: ${JSON.stringify({
+            topic: topic.toString("utf-8"),
+            payloadLength: message.length,
+            payload: contentObj,
+          })}\n\n`
         );
       });
 
@@ -94,7 +103,7 @@ async function run() {
     });
   });
 
-  app.use(express.static("public"));
+  app.use(express.static("dist"));
 
   app.listen(EXPRESS_PORT);
   console.log(`Listening on port ${EXPRESS_PORT}`);
