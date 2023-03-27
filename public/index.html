@@ -37,6 +37,11 @@
           <span></span>
         </li>
 
+        <li id="payloadLength">
+          payload length:
+          <span></span>
+        </li>
+
         <li id="payload">
           payload:
           <span></span>
@@ -49,6 +54,8 @@
 
     <script type="text/javascript">
       const source = new EventSource("/events");
+
+      const vehiclePos = {};
 
       const chartDom = document.getElementById("linechart");
       const myChart = echarts.init(chartDom);
@@ -75,7 +82,7 @@
         const { topic, payloadLength, payload } = JSON.parse(event.data);
 
         document.querySelector("#topic > span").innerHTML = topic;
-        document.querySelector("#payload > span").innerHTML = payloadLength;
+        document.querySelector("#payloadLength > span").innerHTML = payloadLength;
 
         data.push(payloadLength);
         myChart.setOption({
@@ -87,6 +94,27 @@
             },
           ],
         });
+
+        const onroute =
+          payload["tmi8:VV_TM_PUSH"]["tmi8:KV6posinfo"]["tmi8:ONROUTE"];
+
+        if (onroute && onroute.map) {
+          onroute.map((pos) => {
+            const owner = pos["tmi8:dataownercode"]["_text"];
+            const id = pos["tmi8:vehiclenumber"]["_text"];
+            const x = pos["tmi8:rd-x"]["_text"];
+            const y = pos["tmi8:rd-y"]["_text"];
+            console.log(owner, id, x, y);
+            const key = `${owner}${id}`;
+
+            if (!vehiclePos[key]) {
+              vehiclePos[key] = [{ x, y }];
+            } else {
+              vehiclePos[key].push({ x, y });
+            }
+          });
+          document.querySelector("#payload > span").innerHTML = JSON.stringify(vehiclePos);
+        }
       });
     </script>
   </body>
