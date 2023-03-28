@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "tsc -p src/tsconfig.json && vite build && ts-node index.ts"
+    "start": "tsc -p src/tsconfig.json && vite build && cp assets/*.png dist/assets && ts-node index.ts"
   },
   "author": "",
   "license": "ISC",

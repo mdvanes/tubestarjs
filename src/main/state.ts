@@ -1,4 +1,4 @@
-type LatLong = [number, number];
+export type LatLong = [number, number];
 
 export interface VehicleState {
   latLong: LatLong[];
@@ -6,16 +6,16 @@ export interface VehicleState {
 
 export interface AppState {
   vehicles: Record<string, VehicleState>;
+  markers: Array<L.Layer>;
 }
 
 const state: AppState = {
   vehicles: {},
+  markers: [],
 };
 
-export const setVehicles = (vehicles: Array<[string, VehicleState]>) => {
+export const addLocations = (vehicles: Array<[string, VehicleState]>) => {
   vehicles.forEach(([id, vehicleState]) => {
-    state.vehicles;
-
     if (!state.vehicles[id]) {
       state.vehicles[id] = vehicleState;
     } else {
@@ -25,5 +25,16 @@ export const setVehicles = (vehicles: Array<[string, VehicleState]>) => {
       ];
     }
   });
-  state.vehicles = Object.fromEntries(vehicles);
+};
+
+export const getLocations = (): Array<[string, VehicleState]> => {
+  return Object.entries(state.vehicles);
+};
+
+export const setMarkers = (markers: L.Layer[]) => {
+  state.markers = markers;
+};
+
+export const getMarkers = (): L.Layer[] => {
+  return state.markers;
 };
