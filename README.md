@@ -6,7 +6,11 @@ Data source: https://data.ndovloket.nl/REALTIME.TXT
 
 Stack: Express, Server Side Events, Zero MQ bindings.
 
-TODO
+[Converts](./src/main/rd2wgs.ts) RD (Rijksdriehoek) to WGS 84 (Latitude & Longitude coordinates)
+
+![Screenshot](screenshot.png "Screenshot")
+
+
+## TODO
 
 - use fppts / RxJS observable
-- map of vehicle locations
