@@ -19,7 +19,7 @@ L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
     '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
 }).addTo(map);
 
-const source = new EventSource("/events");
+const ndOvSse = new EventSource("/api/ndov");
 
 const vehiclePos: any = {};
 
@@ -101,7 +101,7 @@ const updateMap = (vehicleStates: Array<[string, VehicleState]>) => {
   setMarkers(newMarkers);
 };
 
-source.addEventListener("message", (message: any) => {
+const onEventMessage = (message: { data: any }) => {
   const { topic, payloadLength, payload } = JSON.parse(message.data);
 
   const topicElem = document.querySelector("#topic > span");
@@ -161,4 +161,19 @@ source.addEventListener("message", (message: any) => {
     updateMap(getLocations());
     // renderTable(vehiclePos);
   }
+};
+
+const registerOnMessage = () => {
+  ndOvSse.addEventListener("message", onEventMessage);
+};
+
+registerOnMessage();
+
+ndOvSse.addEventListener("error", (event: Event) => {
+  console.log("my error3", event);
+  ndOvSse.removeEventListener("message", onEventMessage);
+  setTimeout(() => {
+    console.log("reconnect event source");
+    registerOnMessage();
+  }, 2000);
 });

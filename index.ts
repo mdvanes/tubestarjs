@@ -13,8 +13,8 @@ const EXPRESS_PORT = 3000;
 async function run() {
   const app = express();
 
-  app.get("/events", async function (req, res) {
-    console.log("Got /events");
+  app.get("/api/ndov", async function (req, res) {
+    console.log("Got /api/ndov");
     res.set({
       "Cache-Control": "no-cache",
       "Content-Type": "text/event-stream",
