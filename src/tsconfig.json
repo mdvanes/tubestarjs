@@ -3,11 +3,13 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "declaration": false,
-    "rootDir": ".",
-    "removeComments": true,
+    "noEmit": false,
+    "noImplicitAny": true,
     "outDir": "../dist",
+    "removeComments": true,
     "resolveJsonModule": false,
-    "noEmit": false
+    "rootDir": ".",
+    "strict": true
   },
   "include": ["**/*.ts"]
 }
