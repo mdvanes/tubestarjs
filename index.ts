@@ -8,7 +8,7 @@ const sock = zmq.socket("sub");
 const TCP_ENDPOINT = "tcp://pubsub.besteffort.ndovloket.nl:7658";
 const TCP_ENVELOPE = "/EBS/KV6posinfo";
 const TCP_PORT = 7658;
-const EXPRESS_PORT = 3000;
+const EXPRESS_PORT = process.env.PORT || 3000;
 
 async function run() {
   const app = express();

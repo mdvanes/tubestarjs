@@ -4,13 +4,19 @@ export interface VehicleState {
   latLong: LatLong[];
 }
 
+export interface LayerState {
+  id: string;
+  type: "marker" | "polyline";
+  ref: L.Layer;
+}
+
 export interface AppState {
   chart: {
     data: number[];
     ref: echarts.ECharts | undefined;
   };
   map: {
-    markers: Array<L.Layer>;
+    markers: Array<LayerState>;
     ref: L.Map | undefined;
   };
   vehicles: Record<string, VehicleState>;
@@ -45,11 +51,11 @@ export const getLocations = (): Array<[string, VehicleState]> => {
   return Object.entries(state.vehicles);
 };
 
-export const setMarkers = (markers: L.Layer[]) => {
+export const setMarkers = (markers: LayerState[]) => {
   state.map.markers = markers;
 };
 
-export const getMarkers = (): L.Layer[] => {
+export const getMarkers = (): LayerState[] => {
   return state.map.markers;
 };
 

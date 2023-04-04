@@ -10,8 +10,36 @@ import {
 } from "./state.js";
 import { updateMap } from "./map/updateMap.js";
 
-const onEventMessage = (message: { data: any }) => {
-  const { topic, payloadLength, payload } = JSON.parse(message.data);
+const DEFAULT_RETRIES = 3;
+
+// TODO share between API and client
+interface TubestarMessage {
+  topic: string;
+  playloadLength: number;
+  payload: {
+    "tmi8:VV_TM_PUSH"?: {
+      "tmi8:KV6posinfo"?: {
+        "tmi8:ONROUTE"?: Array<{
+          "tmi8:dataownercode": {
+            _text: string;
+          };
+          "tmi8:vehiclenumber": {
+            _text: string;
+          };
+          "tmi8:rd-x": {
+            _text: string;
+          };
+          "tmi8:rd-y": {
+            _text: string;
+          };
+        }>;
+      };
+    };
+  };
+}
+
+const onEventMessage = (message: { data: string }) => {
+  const { topic, payload }: TubestarMessage = JSON.parse(message.data);
 
   const topicElem = document.querySelector("#topic > span");
   if (topicElem) {
@@ -38,11 +66,11 @@ const onEventMessage = (message: { data: any }) => {
   if (onroute && onroute.map) {
     const payloadLengthElem = document.querySelector("#payloadLength > span");
     if (payloadLengthElem) {
-      payloadLengthElem.innerHTML = onroute.length;
+      payloadLengthElem.innerHTML = onroute.length.toString();
     }
 
     const vehicleLocations: Array<[string, VehicleState]> = onroute
-      .map((pos: any): [string, VehicleState] | undefined => {
+      .map((pos): [string, VehicleState] | undefined => {
         const owner = pos["tmi8:dataownercode"]["_text"];
         const id = pos["tmi8:vehiclenumber"]["_text"];
         const x = pos["tmi8:rd-x"]["_text"];
@@ -55,7 +83,7 @@ const onEventMessage = (message: { data: any }) => {
           return undefined;
         }
 
-        const wgs = rd2wgs(x, y);
+        const wgs = rd2wgs(parseInt(x, 10), parseInt(y, 10));
         const latLong: LatLong = [wgs.lat, wgs.long];
 
         // if (!vehiclePos[key]) {
@@ -75,17 +103,29 @@ const onEventMessage = (message: { data: any }) => {
   }
 };
 
-export const connectEventSource = () => {
+export const connectEventSource = (retries: number = DEFAULT_RETRIES) => {
   const ndOvSse = new EventSource("/api/ndov");
+
+  let newRetries = retries;
+
+  ndOvSse.addEventListener("open", () => {
+    newRetries = DEFAULT_RETRIES;
+  });
 
   ndOvSse.addEventListener("message", onEventMessage);
 
   ndOvSse.addEventListener("error", (event: Event) => {
     console.log("Event source disconnected because of an error", event.type);
     ndOvSse.close();
-    setTimeout(() => {
-      console.log("reconnect event source");
-      connectEventSource();
-    }, 500);
+
+    if (newRetries >= 0) {
+      setTimeout(() => {
+        console.log("reconnect event source");
+        connectEventSource(newRetries - 1);
+      }, 500);
+    } else {
+      alert("Error connecting to source");
+      location.reload();
+    }
   });
 };
