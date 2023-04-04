@@ -8,7 +8,7 @@ import {
   LatLong,
   VehicleState,
 } from "./state.js";
-import { updateMap } from "./updateMap.js";
+import { updateMap } from "./map/updateMap.js";
 
 const onEventMessage = (message: { data: any }) => {
   const { topic, payloadLength, payload } = JSON.parse(message.data);

@@ -1,18 +1,14 @@
 import { init as echartsInit } from "echarts";
 import L from "leaflet";
-import { connectEventSource } from "./connectEventSource.js";
-import { rd2wgs } from "./rd2wgs.js";
 import {
   addChartData,
-  addLocations,
-  getLocations,
   getMarkers,
-  LatLong,
   setChartRef,
   setMarkers,
   VehicleState,
-} from "./state.js";
-import { isDefined } from "./util.js";
+} from "../state.js";
+import { isDefined } from "../util.js";
+import { busIcon } from "./busIcon.js";
 
 const map = L.map("map").setView([52.1287049, 5.1870372], 9);
 
@@ -22,13 +18,11 @@ L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
     '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
 }).addTo(map);
 
-// const vehiclePos: any = {};
-
 const initLineChart = () => {
   const chartDom = document.getElementById("linechart");
 
   if (!chartDom) {
-    return; // { data: [], myChart: undefined };
+    return;
   }
 
   const chartRef = echartsInit(chartDom);
@@ -51,23 +45,11 @@ const initLineChart = () => {
 
   option && chartRef.setOption(option);
 
-  //   return { data, myChart };
   addChartData(data);
   setChartRef(chartRef);
 };
 
-// const { data, myChart } =
 initLineChart();
-
-const busIcon = L.icon({
-  iconUrl: "assets/bus-blue.png",
-  shadowUrl: "assets/bus-shadow.png",
-  iconSize: [38, 17], // size of the icon
-  shadowSize: [38, 17], // size of the shadow
-  iconAnchor: [0, 17], // point of the icon which will correspond to marker's location
-  shadowAnchor: [-10, 16], // the same for the shadow
-  popupAnchor: [-3, -76], // point from which the popup should open relative to the iconAnchor
-});
 
 export const updateMap = (vehicleStates: Array<[string, VehicleState]>) => {
   const currentMarkers = getMarkers();
