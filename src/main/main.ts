@@ -1,14 +1,13 @@
-import { rd2wgs } from "./rd2wgs.js";
-import { renderTable } from "./renderTable.js";
 import { init as echartsInit } from "echarts";
 import L from "leaflet";
+import { rd2wgs } from "./rd2wgs.js";
 import {
   addLocations,
-  VehicleState,
   getLocations,
-  setMarkers,
   getMarkers,
   LatLong,
+  setMarkers,
+  VehicleState,
 } from "./state.js";
 
 const map = L.map("map").setView([52.1287049, 5.1870372], 9);
@@ -18,8 +17,6 @@ L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
   attribution:
     '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
 }).addTo(map);
-
-const ndOvSse = new EventSource("/api/ndov");
 
 const vehiclePos: any = {};
 
@@ -163,17 +160,19 @@ const onEventMessage = (message: { data: any }) => {
   }
 };
 
-const registerOnMessage = () => {
+const connectEventSource = () => {
+  const ndOvSse = new EventSource("/api/ndov");
+
   ndOvSse.addEventListener("message", onEventMessage);
+
+  ndOvSse.addEventListener("error", (event: Event) => {
+    console.log("Event source disconnected because of an error", event.type);
+    ndOvSse.close();
+    setTimeout(() => {
+      console.log("reconnect event source");
+      connectEventSource();
+    }, 500);
+  });
 };
 
-registerOnMessage();
-
-ndOvSse.addEventListener("error", (event: Event) => {
-  console.log("my error3", event);
-  ndOvSse.removeEventListener("message", onEventMessage);
-  setTimeout(() => {
-    console.log("reconnect event source");
-    registerOnMessage();
-  }, 2000);
-});
+connectEventSource();
