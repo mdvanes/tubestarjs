@@ -5,21 +5,27 @@ export interface VehicleState {
 }
 
 export interface AppState {
-  vehicles: Record<string, VehicleState>;
-  markers: Array<L.Layer>;
   chart: {
     data: number[];
     ref: echarts.ECharts | undefined;
   };
+  map: {
+    markers: Array<L.Layer>;
+    ref: L.Map | undefined;
+  };
+  vehicles: Record<string, VehicleState>;
 }
 
 const state: AppState = {
-  vehicles: {},
-  markers: [],
   chart: {
     data: [],
     ref: undefined,
   },
+  map: {
+    markers: [],
+    ref: undefined,
+  },
+  vehicles: {},
 };
 
 export const addLocations = (vehicles: Array<[string, VehicleState]>) => {
@@ -40,11 +46,19 @@ export const getLocations = (): Array<[string, VehicleState]> => {
 };
 
 export const setMarkers = (markers: L.Layer[]) => {
-  state.markers = markers;
+  state.map.markers = markers;
 };
 
 export const getMarkers = (): L.Layer[] => {
-  return state.markers;
+  return state.map.markers;
+};
+
+export const setMapRef = (mapRef: L.Map) => {
+  state.map.ref = mapRef;
+};
+
+export const getMapRef = (): L.Map | undefined => {
+  return state.map.ref;
 };
 
 export const addChartData = (data: number[]): number[] => {

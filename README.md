@@ -10,7 +10,7 @@ Stack: Express, Server Side Events, Zero MQ bindings.
 
 ![Screenshot](screenshot.png "Screenshot")
 
-
 ## TODO
 
-- use fppts / RxJS observable
+- prevent the blinking of markers on each update
+- use fp-ts / RxJS observable
