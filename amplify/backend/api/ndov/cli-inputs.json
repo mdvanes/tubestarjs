@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "paths": {
+    "/ndov": {
+      "name": "/ndov",
+      "lambdaFunction": "tubestarjsd17d9431",
+      "permissions": {
+        "setting": "protected",
+        "auth": [
+          "read"
+        ],
+        "guest": [
+          "read"
+        ]
+      }
+    }
+  }
+}

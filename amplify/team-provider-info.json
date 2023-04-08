@@ -1,0 +1,30 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-tubestarjs-dev-183324-authRole",
+      "UnauthRoleArn": "arn:aws:iam::552504168047:role/amplify-tubestarjs-dev-183324-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::552504168047:role/amplify-tubestarjs-dev-183324-authRole",
+      "Region": "eu-west-1",
+      "DeploymentBucketName": "amplify-tubestarjs-dev-183324-deployment",
+      "UnauthRoleName": "amplify-tubestarjs-dev-183324-unauthRole",
+      "StackName": "amplify-tubestarjs-dev-183324",
+      "StackId": "arn:aws:cloudformation:eu-west-1:552504168047:stack/amplify-tubestarjs-dev-183324/17789670-d62b-11ed-864d-0670b0531421",
+      "AmplifyAppId": "dp572g17tjorv",
+      "APIGatewayAuthURL": "https://s3.amazonaws.com/amplify-tubestarjs-dev-183324-deployment/amplify-cfn-templates/api/APIGatewayAuthStack.json"
+    },
+    "categories": {
+      "function": {
+        "tubestarjsd17d9431": {
+          "deploymentBucketName": "amplify-tubestarjs-dev-183324-deployment",
+          "s3Key": "amplify-builds/tubestarjsd17d9431-6f44584739697a347655-build.zip"
+        }
+      },
+      "auth": {
+        "tubestarjs": {}
+      },
+      "api": {
+        "ndov": {}
+      }
+    }
+  }
+}
