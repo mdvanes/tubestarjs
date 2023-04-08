@@ -10,6 +10,12 @@ Stack: Express, Server Side Events, Zero MQ bindings.
 
 ![Screenshot](screenshot.png "Screenshot")
 
+## Usage
+
+- development: `npm start` and go to http://localhost:5173/
+- production: `npm build`, `npm serve` and go to http://localhost:3000/
+- docker: `docker-compose up` and go to http://localhost:3000/
+
 ## TODO
 
 - Add Dockerfile & docker-compose

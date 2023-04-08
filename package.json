@@ -8,7 +8,7 @@
     "dev:vite": "vite",
     "dev:node": "nodemon index.ts",
     "start": "npm run build:assets && concurrently --kill-others \"npm:dev:node\" \"npm:dev:tsc\" \"npm:dev:vite\"",
-    "build:assets": "cp assets/*.png dist/assets",
+    "build:assets": "mkdir -p dist/assets && cp assets/*.png dist/assets",
     "build": "tsc -p src/tsconfig.json && vite build && npm run build:assets",
     "serve": "ts-node index.ts"
   },
