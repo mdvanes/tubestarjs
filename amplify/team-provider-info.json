@@ -16,7 +16,7 @@
       "function": {
         "tubestarjsd17d9431": {
           "deploymentBucketName": "amplify-tubestarjs-dev-183324-deployment",
-          "s3Key": "amplify-builds/tubestarjsd17d9431-6f44584739697a347655-build.zip"
+          "s3Key": "amplify-builds/tubestarjsd17d9431-734c56645a6f4170626e-build.zip"
         }
       },
       "auth": {

@@ -9,6 +9,7 @@ import {
   VehicleState,
 } from "./state.js";
 import { updateMap } from "./map/updateMap.js";
+import { getAwsData } from "./getAwsData.js";
 
 const DEFAULT_RETRIES = 3;
 
@@ -103,7 +104,15 @@ const onEventMessage = (message: { data: string }) => {
   }
 };
 
-export const connectEventSource = (retries: number = DEFAULT_RETRIES) => {
+export const connectEventSource = async (retries: number = DEFAULT_RETRIES) => {
+  try {
+    // TODO use AWS API for EventSource? With await API.endpoint(apiName)
+    const awsResponse = await getAwsData();
+    console.log(awsResponse);
+  } catch (err) {
+    console.log("AWS failed, skipping");
+  }
+
   const ndOvSse = new EventSource("/api/ndov");
 
   let newRetries = retries;
