@@ -2,6 +2,7 @@ import L from "leaflet";
 import {
   getMapRef,
   getMarkers,
+  LayerState,
   setMapRef,
   setMarkers,
   VehicleState,
@@ -27,11 +28,11 @@ export const updateMap = (vehicleStates: Array<[string, VehicleState]>) => {
     throw new Error("Invalid map ref");
   }
   const currentMarkers = getMarkers();
-  currentMarkers.forEach((m) => m.remove());
+  currentMarkers.forEach((m) => m.ref.remove());
 
   const newMarkers = vehicleStates
-    .flatMap(([id, st]) => {
-      const vehicleMarkers = [];
+    .flatMap(([id, st]): LayerState[] => {
+      const vehicleMarkers: LayerState[] = [];
       if (st.latLong.length > 1) {
         // console.log(id, st.latLong);
         var polyline = L.polyline(st.latLong, {
@@ -39,13 +40,30 @@ export const updateMap = (vehicleStates: Array<[string, VehicleState]>) => {
           weight: 2,
           color: "#3388ff",
         }).addTo(mapRef);
-        vehicleMarkers.push(polyline);
+        vehicleMarkers.push({
+          id,
+          type: "polyline",
+          ref: polyline,
+        });
       }
       const lastLatLong = st.latLong.at(-1);
       if (lastLatLong) {
+        // const currentMarker = currentMarkers.find(
+        //   (m) => m.id === id && m.type === "marker"
+        // );
+        // if (currentMarker) {
+        //   // console.log((currentMarker.ref as L.Marker).getLatLng());
+        //   (currentMarker.ref as L.Marker).setLatLng(lastLatLong);
+        //   vehicleMarkers.push(currentMarker);
+        // } else {
         const m = L.marker(lastLatLong, { icon: busIcon });
         m.addTo(mapRef);
-        vehicleMarkers.push(m);
+        vehicleMarkers.push({
+          id,
+          type: "marker",
+          ref: m,
+        });
+        // }
       }
       return vehicleMarkers;
     })
