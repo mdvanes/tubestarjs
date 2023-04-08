@@ -12,5 +12,9 @@ Stack: Express, Server Side Events, Zero MQ bindings.
 
 ## TODO
 
+- Add Dockerfile & docker-compose
+- deploy to AWS Amplify
+- add second event source for HTM
 - prevent the blinking of markers on each update
-- use fp-ts / RxJS observable
+- use fp-ts and/or RxJS observable
+- https://github.com/dekguh/Leaflet.MoveMarker
