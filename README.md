@@ -22,6 +22,8 @@ Stack: Express, Server Side Events, Zero MQ bindings.
     - `amplify init`
     - `amplify add api` https://docs.amplify.aws/lib/restapi/getting-started/q/platform/js/#automated-setup-create-new-rest-api > REST
     - `amplify push`
+    - TODO amplify hosting add / amplify publish
+    - `amplify hosting add` > "Hosting with Amplify Console" > "Manual Deployment"
     - TODO https://eu-west-1.console.aws.amazon.com/amplify/ > tubestarjs > Hosting environments
     - Connect to the Github repo
     - Configure output dir "dist"

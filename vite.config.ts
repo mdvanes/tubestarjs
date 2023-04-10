@@ -2,12 +2,16 @@ import { defineConfig } from "vite";
 
 export default defineConfig({
   define: {
-    // Global needed for Amplify
-    global: {},
+    global: "globalThis", // for AWS SDK
   },
   server: {
     proxy: {
       "/api/ndov": "http://localhost:3000",
+    },
+  },
+  resolve: {
+    alias: {
+      "./runtimeConfig": "./runtimeConfig.browser", // for AWS SDK
     },
   },
 });

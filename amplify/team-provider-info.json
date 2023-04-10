@@ -24,6 +24,12 @@
       },
       "api": {
         "ndov": {}
+      },
+      "hosting": {
+        "amplifyhosting": {
+          "appId": "dp572g17tjorv",
+          "type": "manual"
+        }
       }
     }
   }
