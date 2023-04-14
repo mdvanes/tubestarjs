@@ -11,20 +11,21 @@ const TCP_ENVELOPE = "/EBS/KV6posinfo";
 // const TCP_ENVELOPE = "/RIG/KV6posinfo";
 const TCP_PORT = 7658;
 const EXPRESS_PORT = process.env.PORT || 3000;
+const DEBUG = process.env.DEBUG || false;
 
-let mockRdX = 90000;
+let mockRdX = 80000;
 
 const writeMock = (res: Response) => {
-  mockRdX += 1000;
+  mockRdX += 500;
 
   const contentObj: TubestarMessage["payload"] = {
     "tmi8:VV_TM_PUSH": {
       "tmi8:KV6posinfo": {
         "tmi8:ONROUTE": [
           {
-            "tmi8:dataownercode": { _text: "MD" },
-            "tmi8:rd-x": { _text: `${mockRdX}`},
-            "tmi8:rd-y": { _text: "450000" },
+            "tmi8:dataownercode": { _text: "TS" },
+            "tmi8:rd-x": { _text: `${mockRdX}` },
+            "tmi8:rd-y": { _text: `${Math.floor(Math.random() * 1000) + 449000}` },
             "tmi8:vehiclenumber": { _text: "1337" },
           },
         ],
@@ -60,10 +61,13 @@ async function run() {
     sock.subscribe(TCP_ENVELOPE);
     console.log(`Subscriber connected to port ${TCP_PORT}`);
 
-    setInterval(() => {
+    if (DEBUG) {
+      console.log("Running in DEBUG mode, emmitting mock values");
+      setInterval(() => {
+        writeMock(res);
+      }, 5000);
       writeMock(res);
-    }, 5000);
-    writeMock(res);
+    }
 
     sock.on("message", function (topic, message) {
       // console.log(

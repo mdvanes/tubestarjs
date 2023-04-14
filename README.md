@@ -38,7 +38,6 @@ Stack: Express, Server Side Events, Zero MQ bindings.
 
 ## TODO
 
-- prevent the blinking of markers on each update
 - add second event source for HTM (multiple topics in one call?)
 - use fp-ts and/or RxJS observable
 - https://github.com/dekguh/Leaflet.MoveMarker
