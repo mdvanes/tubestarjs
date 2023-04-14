@@ -7,5 +7,5 @@ export const busIcon = L.icon({
   shadowSize: [38, 17], // size of the shadow
   iconAnchor: [0, 17], // point of the icon which will correspond to marker's location
   shadowAnchor: [-10, 16], // the same for the shadow
-  popupAnchor: [-3, -76], // point from which the popup should open relative to the iconAnchor
+  popupAnchor: [16, -16], // point from which the popup should open relative to the iconAnchor
 });

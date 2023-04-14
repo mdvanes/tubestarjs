@@ -1,14 +1,45 @@
-import express from "express";
+import express, { Response } from "express";
 import zmq from "zeromq";
 import zlib from "zlib";
 import xmlJs from "xml-js";
+import { TubestarMessage } from "./src/main/tubestar.types";
 
 const sock = zmq.socket("sub");
 
 const TCP_ENDPOINT = "tcp://pubsub.besteffort.ndovloket.nl:7658";
 const TCP_ENVELOPE = "/EBS/KV6posinfo";
+// const TCP_ENVELOPE = "/RIG/KV6posinfo";
 const TCP_PORT = 7658;
 const EXPRESS_PORT = process.env.PORT || 3000;
+
+let mockRdX = 90000;
+
+const writeMock = (res: Response) => {
+  mockRdX += 1000;
+
+  const contentObj: TubestarMessage["payload"] = {
+    "tmi8:VV_TM_PUSH": {
+      "tmi8:KV6posinfo": {
+        "tmi8:ONROUTE": [
+          {
+            "tmi8:dataownercode": { _text: "MD" },
+            "tmi8:rd-x": { _text: `${mockRdX}`},
+            "tmi8:rd-y": { _text: "450000" },
+            "tmi8:vehiclenumber": { _text: "1337" },
+          },
+        ],
+      },
+    },
+  };
+
+  const tubestarMessage: TubestarMessage = {
+    topic: "MOCK",
+    payloadLength: 1,
+    payload: contentObj,
+  };
+
+  res.write(`data: ${JSON.stringify(tubestarMessage)}\n\n`);
+};
 
 async function run() {
   const app = express();
@@ -28,6 +59,11 @@ async function run() {
     sock.connect(TCP_ENDPOINT);
     sock.subscribe(TCP_ENVELOPE);
     console.log(`Subscriber connected to port ${TCP_PORT}`);
+
+    setInterval(() => {
+      writeMock(res);
+    }, 5000);
+    writeMock(res);
 
     sock.on("message", function (topic, message) {
       // console.log(
@@ -62,13 +98,13 @@ async function run() {
         //   }
         // );
 
-        res.write(
-          `data: ${JSON.stringify({
-            topic: topic.toString("utf-8"),
-            payloadLength: message.length,
-            payload: contentObj,
-          })}\n\n`
-        );
+        const tubestarMessage: TubestarMessage = {
+          topic: topic.toString("utf-8"),
+          payloadLength: message.length,
+          payload: contentObj as TubestarMessage["payload"],
+        };
+
+        res.write(`data: ${JSON.stringify(tubestarMessage)}\n\n`);
       });
     });
   });

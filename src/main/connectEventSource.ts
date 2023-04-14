@@ -9,35 +9,10 @@ import {
   VehicleState,
 } from "./state.js";
 import { updateMap } from "./map/updateMap.js";
-import { getAwsData } from "./getAwsData.js";
+import { TubestarMessage } from "./tubestar.types.js";
+// import { getAwsData } from "./getAwsData.js";
 
 const DEFAULT_RETRIES = 3;
-
-// TODO share between API and client
-interface TubestarMessage {
-  topic: string;
-  playloadLength: number;
-  payload: {
-    "tmi8:VV_TM_PUSH"?: {
-      "tmi8:KV6posinfo"?: {
-        "tmi8:ONROUTE"?: Array<{
-          "tmi8:dataownercode": {
-            _text: string;
-          };
-          "tmi8:vehiclenumber": {
-            _text: string;
-          };
-          "tmi8:rd-x": {
-            _text: string;
-          };
-          "tmi8:rd-y": {
-            _text: string;
-          };
-        }>;
-      };
-    };
-  };
-}
 
 const onEventMessage = (message: { data: string }) => {
   const { topic, payload }: TubestarMessage = JSON.parse(message.data);
@@ -105,13 +80,13 @@ const onEventMessage = (message: { data: string }) => {
 };
 
 export const connectEventSource = async (retries: number = DEFAULT_RETRIES) => {
-  try {
-    // TODO use AWS API for EventSource? With await API.endpoint(apiName)
-    const awsResponse = await getAwsData();
-    console.log(awsResponse);
-  } catch (err) {
-    console.log("AWS failed, skipping");
-  }
+  // try {
+  //   // TODO Although AWS API.endpoint(apiName) could give an URL that can be used for EventSource, it's a Lambda, so it would not stay open
+  //   const awsResponse = await getAwsData();
+  //   console.log(awsResponse);
+  // } catch (err) {
+  //   console.log("AWS failed, skipping");
+  // }
 
   const ndOvSse = new EventSource("/api/ndov");
 
